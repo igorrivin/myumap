@@ -1,0 +1,4 @@
+umap-learn
+trimap
+pacmap
+jax
