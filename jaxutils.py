@@ -80,6 +80,6 @@ def get_irreg_grid_full(f, num, eps):
   g = vmap(g, in_axes=( 0))
   return jnp.vstack(g(parray))
 
-f2 = lambda x: jnp.array([ (2 + jnp.cos(2* 2 * jnp.pi * x)) * jnp.cos(3*2 * jnp.pi * x), ( 2 + jnp.cos(2*2 * jnp.pi * x)) * jnp.sin(3*2 * jnp.pi * x), -3 * jnp.sin(2*2 * jnp.pi * x)])
+#f2 = lambda x: jnp.array([ (2 + jnp.cos(2* 2 * jnp.pi * x)) * jnp.cos(3*2 * jnp.pi * x), ( 2 + jnp.cos(2*2 * jnp.pi * x)) * jnp.sin(3*2 * jnp.pi * x), -3 * jnp.sin(2*2 * jnp.pi * x)])
 
-ffi = np.array(get_irreg_grid(f2, 10000, 0.05))
+#ffi = np.array(get_irreg_grid(f2, 10000, 0.05))
