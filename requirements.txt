@@ -5,4 +5,5 @@ jax
 opencv-python
 faiss-cpu
 matplotlib
+pytube
 

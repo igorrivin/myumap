@@ -34,7 +34,7 @@ def get_frame_list(fname, freq = None, max_count = 1000):
         if count % frame_step == 0:  # If this frame number is a multiple of the frame step
         #cv2.imwrite('frame{:d}.jpg'.format(count), frame)
             flist.append(frame)
-        print(count, len(flist))
+        #print(count, len(flist))
 
         count += 1
     cap.release()
@@ -64,7 +64,7 @@ def calculate_intrinsic_dimension(distances):
     ratios = distances[:, 0] / distances[:, 1]
 
     # ignore ratios where distance to first neighbour is zero
-    ratios = ratios[~np.isinf(ratios)]
+    ratios = ratios[~np.isinf(ratios) & ~np.isnan(ratios) & (ratios > 0)]
 
     # calculate the intrinsic dimension
     intrinsic_dim = len(ratios) / -np.sum(np.log(ratios))
