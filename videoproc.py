@@ -11,7 +11,41 @@ import math
 
 import sys
 
-def get_frame_list(fname, freq = None, max_count = 1000):
+
+def get_frame_list(fname, freq=None, max_count=1000):
+    cap = cv2.VideoCapture(fname)
+    frame_rate = cap.get(cv2.CAP_PROP_FPS)
+    frame_step = 1 if freq is None else math.floor(frame_rate / freq)
+
+    if not cap.isOpened():
+        raise Exception(f'Error opening video file {fname}')
+
+    # Read the first frame to get its size
+    ret, frame = cap.read()
+    if not ret:
+        raise Exception('Could not read first frame')
+
+    # Preallocate a numpy array to hold all the frames
+    frame = np.ndarray.flatten(frame)
+    flist = np.empty((max_count, len(frame)), dtype=np.float32)
+
+    count = 0
+    while count < max_count:
+        if count % frame_step == 0:  # If this frame number is a multiple of the frame step
+            flist[count] = np.ndarray.flatten(frame)
+
+        count += 1
+
+        # Read next frame for the next iteration
+        ret, frame = cap.read()
+        if not ret:
+            break  # Video file ended
+
+    cap.release()
+    # No need for ascontiguousarray or astype, flist is already a contiguous float32 array
+    return flist[:count]  # Return the part of the array that we filled
+
+""" def get_frame_list(fname, freq = None, max_count = 1000):
     #freq tells us how many times a second we sample. None tells us that we sample every frame.
     cap = cv2.VideoCapture(fname)
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
@@ -40,7 +74,7 @@ def get_frame_list(fname, freq = None, max_count = 1000):
     cap.release()
     tmpdata = np.vstack(flist)
     data = np.ascontiguousarray(tmpdata.astype(np.float32))
-    return data
+    return data """
 
 def do_nn(data, k=2, algo='faiss'):
     print(algo)
