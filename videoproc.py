@@ -83,9 +83,8 @@ def plot_histogram(ratios, filename=None):
 #neigh.fit(Idata)
 #s=neigh.kneighbors(n_neighbors=2, return_distance=True)
 
-def do_data(fname, freq, maxcount, outfile):
+def do_data(fname, freq, maxcount, outfile=None, algo=None):
     data = get_frame_list(fname, freq, max_count = maxcount)
-    algo = args.algo
     print(data.shape)
     s = do_nn(data, k=2, algo=algo)
     print("Found neighbors")
@@ -100,7 +99,8 @@ def main(args):
     freq = args.freq
     outfile = args.outfile
     maxcount = args.maxcount
-    do_data(fname, freq, maxcount, outfile)
+    algo = args.algo
+    do_data(fname, freq, maxcount, outfile, algo)
     """ data = get_frame_list(fname, freq)
     algo = args.algo
     print(data.shape)
