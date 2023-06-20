@@ -11,7 +11,7 @@ import math
 
 import sys
 
-def get_frame_list(fname, freq = None):
+def get_frame_list(fname, freq = None, max_count = 1000):
     #freq tells us how many times a second we sample. None tells us that we sample every frame.
     cap = cv2.VideoCapture(fname)
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
@@ -23,7 +23,7 @@ def get_frame_list(fname, freq = None):
         raise Exception(f'Error opening video file {fname}')
     flist = []
     count = 0
-    while True:
+    while count < max_count:
         ret, frame = cap.read()
     
         if not ret:
