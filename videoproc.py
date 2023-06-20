@@ -83,11 +83,8 @@ def plot_histogram(ratios, filename=None):
 #neigh.fit(Idata)
 #s=neigh.kneighbors(n_neighbors=2, return_distance=True)
 
-def main(args):
-    fname = args.file
-    freq = args.freq
-    outfile = args.outfile
-    data = get_frame_list(fname, freq)
+def do_data(fname, freq, maxcount, outfile):
+    data = get_frame_list(fname, freq, max_count = maxcount)
     algo = args.algo
     print(data.shape)
     s = do_nn(data, k=2, algo=algo)
@@ -97,6 +94,23 @@ def main(args):
     print('Number of coinciding images=', np.sum(np.isinf(s[0][:, 0])))
     print('Dataset cardinality=', len(ratios))
     plot_histogram(ratios, outfile)
+
+def main(args):
+    fname = args.file
+    freq = args.freq
+    outfile = args.outfile
+    maxcount = args.maxcount
+    do_data(fname, freq, maxcount, outfile)
+    """ data = get_frame_list(fname, freq)
+    algo = args.algo
+    print(data.shape)
+    s = do_nn(data, k=2, algo=algo)
+    print("Found neighbors")
+    intrinsic_dim, ratios = calculate_intrinsic_dimension(s[0])
+    print('Intrinsic Dimension =', intrinsic_dim)
+    print('Number of coinciding images=', np.sum(np.isinf(s[0][:, 0])))
+    print('Dataset cardinality=', len(ratios))
+    plot_histogram(ratios, outfile) """
     return 0
 
 
@@ -106,5 +120,6 @@ if __name__ == '__main__':
     parser.add_argument('--freq', type = int)
     parser.add_argument('--outfile', help='where should we output the histogram')
     parser.add_argument('--algo', help = 'what algorithm to use')
+    parser.add_argument('--maxcount', type = int, default = 1000, help='maximum number of frames to process')
     args = parser.parse_args()
     sys.exit(main(args))
