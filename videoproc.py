@@ -6,6 +6,7 @@ import faiss
 from argparse import ArgumentParser
 from sklearn.neighbors import NearestNeighbors as nn
 import pywt
+from sklearn.cluster import SpectralClustering
 
 
 
@@ -37,11 +38,12 @@ def transf(frame, wavelet):
     return frame
 
 
-def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = None):
+def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = None, get_orig = False):
     chandict = {'B':0, 'G':1, 'R':2}
     cap = cv2.VideoCapture(fname)
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
     frame_step = 1 if freq is None else math.floor(frame_rate / freq)
+    orig_list = []
 
     if not cap.isOpened():
         raise Exception(f'Error opening video file {fname}')
@@ -53,6 +55,8 @@ def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = 
 
     # Preallocate a numpy array to hold all the frames
     frame = transf(frame, wavelet)
+    if get_orig:
+        orig_list.append(frame)
     frame = np.ndarray.flatten(frame)
     l = len(frame)
     if get_chan is not None:
@@ -77,10 +81,12 @@ def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = 
         if not ret:
             break  # Video file ended
         frame = transf(frame, wavelet)
+        if get_orig:
+            orig_list.append(frame)
 
     cap.release()
     # No need for ascontiguousarray or astype, flist is already a contiguous float32 array
-    return flist[:count]  # Return the part of the array that we filled
+    return flist[:count], orig_list  # Return the part of the array that we filled and the list of original frames
 
 """ def get_frame_list(fname, freq = None, max_count = 1000):
     #freq tells us how many times a second we sample. None tells us that we sample every frame.
@@ -139,7 +145,8 @@ def calculate_intrinsic_dimension(distances):
 
     # calculate the intrinsic dimension
     intrinsic_dim = len(ratios) / -np.sum(np.log(ratios))
-
+    print('Intrinsic Dimension =', intrinsic_dim)
+    print('Dataset cardinality=', len(ratios))
     return intrinsic_dim, ratios
 
 def plot_histogram(ratios, filename=None):
@@ -154,16 +161,25 @@ def plot_histogram(ratios, filename=None):
 #neigh.fit(Idata)
 #s=neigh.kneighbors(n_neighbors=2, return_distance=True)
 
+def get_dim(data, algo = None, do_plot = False, filename = None):
+   s = do_nn(data, algo = algo)
+   print('Number of coinciding images=', np.sum(np.isinf(s[0][:, 0])))
+   d, r = calculate_intrinsic_dimension(s[0])
+   if do_plot:
+       plot_histogram(r, filename)
+   return calculate_intrinsic_dimension(s[0])
+
 def do_data(fname,  freq, maxcount, outfile=None, algo=None, get_chan = None, wavelet = None):
-    data = get_frame_list(fname, freq, max_count = maxcount, get_chan = get_chan, wavelet=wavelet)
+    data, _ = get_frame_list(fname, freq, max_count = maxcount, get_chan = get_chan, wavelet=wavelet)
     print(data.shape)
-    s = do_nn(data, k=2, algo=algo)
-    print("Found neighbors")
-    intrinsic_dim, ratios = calculate_intrinsic_dimension(s[0])
+    intrinsic_dim, ratios = get_dim(data, algo=algo, do_plot = True, filename = outfile)
+    # s = do_nn(data, k=2, algo=algo)
+    # print("Found neighbors")
+    # intrinsic_dim, ratios = calculate_intrinsic_dimension(s[0])
     print('Intrinsic Dimension =', intrinsic_dim)
-    print('Number of coinciding images=', np.sum(np.isinf(s[0][:, 0])))
+    #print('Number of coinciding images=', np.sum(np.isinf(s[0][:, 0])))
     print('Dataset cardinality=', len(ratios))
-    plot_histogram(ratios, outfile)
+    #plot_histogram(ratios, outfile)
 
 def main(args):
     fname = args.file
