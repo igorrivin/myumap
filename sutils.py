@@ -2,6 +2,8 @@ from statsmodels.distributions.empirical_distribution import ECDF
 import cvxpy as cp
 import numpy as np
 
+from videoproc import get_dim
+
 def fit_poly(data, degree=10, eps = 1e-6):
     ecdf = ECDF(data)
     x = ecdf.x[1:]
@@ -20,3 +22,14 @@ def fit_poly(data, degree=10, eps = 1e-6):
     return p, c
 
 
+def get_poly(data, degree, pplot = True, **kwargs):
+  d, r = get_dim(data, **kwargs)
+  p, c = fit_poly(r, degree=degree)
+  if pplot:
+    ecdf = ECDF(r)
+    x = ecdf.x[1:]
+    y = ecdf.y[1:]
+    plt.plot(x,y)
+    plt.plot(x, p(x))
+    plt.show()
+  return p, c, d, r
