@@ -2,6 +2,7 @@ umap-learn
 trimap
 pacmap
 jax
+jaxlib
 opencv-python
 faiss-cpu
 matplotlib
