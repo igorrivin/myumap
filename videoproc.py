@@ -38,7 +38,7 @@ def transf(frame, wavelet):
     return frame
 
 
-def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = None, get_orig = False):
+def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = None, get_orig = False, start = 0:
     chandict = {'B':0, 'G':1, 'R':2}
     cap = cv2.VideoCapture(fname)
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
@@ -66,7 +66,10 @@ def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = 
     flist = np.empty((max_count, l1), dtype=np.float32)
 
     count = 0
-    while count < max_count:
+    while count < max_count + start:
+        if count < start:
+            count += 1
+            continue
         if count % frame_step == 0:  # If this frame number is a multiple of the frame step
             newframe = np.ndarray.flatten(frame)
             if get_chan is None:
