@@ -38,7 +38,7 @@ def transf(frame, wavelet):
     return frame
 
 
-def get_frame_list(fname, freq=None, max_count=1000, get_chan = None, wavelet = None, get_orig = False, start = 0:
+def get_frame_list(fname,*, freq=None, max_count=1000, get_chan = None, wavelet = None, get_orig = False, start = 0):
     chandict = {'B':0, 'G':1, 'R':2}
     cap = cv2.VideoCapture(fname)
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
