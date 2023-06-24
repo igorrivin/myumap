@@ -48,10 +48,11 @@ def get_frame_list(fname,*, freq=None, max_count=1000, get_chan = None, wavelet 
     if not cap.isOpened():
         raise Exception(f'Error opening video file {fname}')
 
-    # Read the first frame to get its size
-    ret, frame = cap.read()
-    if not ret:
-        raise Exception('Could not read first frame')
+    for i in range(start+1):
+        # Read the first frame to get its size
+        ret, frame = cap.read()
+        if not ret:
+            raise Exception('Could not read enough frames')
 
     # Preallocate a numpy array to hold all the frames
     frame = transf(frame, wavelet)
@@ -66,10 +67,7 @@ def get_frame_list(fname,*, freq=None, max_count=1000, get_chan = None, wavelet 
     flist = np.empty((max_count, l1), dtype=np.float32)
 
     count = 0
-    while count < max_count + start:
-        if count < start:
-            count += 1
-            continue
+    while count < max_count:
         if count % frame_step == 0:  # If this frame number is a multiple of the frame step
             newframe = np.ndarray.flatten(frame)
             if get_chan is None:
