@@ -170,8 +170,8 @@ def get_dim(data, algo = None, do_plot = False, filename = None):
        plot_histogram(r, filename)
    return calculate_intrinsic_dimension(s[0])
 
-def do_data(fname,  freq, maxcount, outfile=None, algo=None, get_chan = None, wavelet = None, start = 0):
-    data, _ = get_frame_list(fname, freq=freq, max_count = maxcount, get_chan = get_chan, wavelet=wavelet, start=start)
+def do_data(fname,  *, algo=None, **kwargs):
+    data, _ = get_frame_list(fname, **kwargs)
     print(data.shape)
     intrinsic_dim, ratios = get_dim(data, algo=algo, do_plot = True, filename = outfile)
     # s = do_nn(data, k=2, algo=algo)
