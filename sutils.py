@@ -1,6 +1,7 @@
 from statsmodels.distributions.empirical_distribution import ECDF
 import cvxpy as cp
 import numpy as np
+import matplotlib.pyplot as plt
 
 from videoproc import get_dim
 

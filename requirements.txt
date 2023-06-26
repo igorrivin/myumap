@@ -7,4 +7,4 @@ opencv-python
 faiss-cpu
 matplotlib
 pytube
-
+scenedetect
