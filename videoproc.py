@@ -137,7 +137,7 @@ def do_nn(data, k=2, algo='faiss'):
 
 
 
-def calculate_intrinsic_dimension(distances, d1=1, d2=2):
+def calculate_intrinsic_dimension(distances, *, d1=1, d2=2):
     # calculate the ratio of distances
     ratios = distances[:, d1-1] / distances[:, d2-1]
 
