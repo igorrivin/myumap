@@ -162,10 +162,10 @@ def plot_histogram(ratios, filename=None):
 #neigh.fit(Idata)
 #s=neigh.kneighbors(n_neighbors=2, return_distance=True)
 
-def get_dim(data, algo = None, do_plot = False, filename = None):
+def get_dim(data, algo = None, do_plot = False, filename = None, **kwargs):
    s = do_nn(data, algo = algo)
    print('Number of coinciding images=', np.sum(np.isinf(s[0][:, 0])))
-   d, r = calculate_intrinsic_dimension(s[0])
+   d, r = calculate_intrinsic_dimension(s[0], **kwargs)
    if do_plot:
        plot_histogram(r, filename)
    return calculate_intrinsic_dimension(s[0])
