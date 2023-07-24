@@ -132,7 +132,7 @@ def do_nn(data, k=2, algo='faiss'):
         return D, I
     neigh = nn()
     neigh.fit(data)
-    s=neigh.kneighbors(n_neighbors=2, return_distance=True)
+    s=neigh.kneighbors(n_neighbors=4, return_distance=True)
     return s
 
 
