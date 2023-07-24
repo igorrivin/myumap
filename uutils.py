@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from sklearn.manifold import TSNE
+from sklearn.manifold import TSNE, SpectralEmbedding
 import umap
 import trimap
 import pacmap
@@ -9,11 +9,13 @@ def umap_compare(data,*, alg = 'umap',indim = 3, outdim = 2, **kwargs):
   if alg == 'umap':
     reducer = umap.UMAP(n_components = outdim, **kwargs)
   elif alg == 'trimap':
-    reducer = trimap.TRIMAP(n_dims = outdim )
+    reducer = trimap.TRIMAP(n_dims = outdim, **kwargs )
   elif alg == 'pacmap':
-    reducer = pacmap.PaCMAP(n_components = outdim)
+    reducer = pacmap.PaCMAP(n_components = outdim, **kwargs)
   elif alg =='tsne':
-    reducer = TSNE(n_components = outdim)
+    reducer = TSNE(n_components = outdim, **kwargs)
+  elif alg == 'spec':
+    reducer =  SpectralEmbedding(n_components = outdim, **kwargs)
   else:
     return
   #data = rand_pt(indim, n)
