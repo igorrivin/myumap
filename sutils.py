@@ -19,7 +19,7 @@ def fit_gen_poly(funcs, data, eps = 1e-6):
     ecdf = ECDF(data)
     x = ecdf.x[1:]
     y = ecdf.y[1:]
-    degree = len(funcs)
+    degree = len(funcs)-1
 
     V = gen_van(funcs, x)
     coeffs = cp.Variable(degree+1)
@@ -50,9 +50,13 @@ def fit_poly(data, degree=10, eps = 1e-6):
     return p, c
 
 
-def get_poly(data, degree, pplot = True, **kwargs):
+def get_poly(data, degree, pplot = True, is_gen = False,  **kwargs):
   d, r = get_dim(data, **kwargs)
-  p, c = fit_poly(r, degree=degree)
+  if is_gen:
+    funcs = make_many(degree+1)
+    p, c = fit_gen_poly(funcs, r)
+  else:
+    p, c = fit_poly(r, degree=degree)
   if pplot:
     ecdf = ECDF(r)
     x = ecdf.x[1:]
