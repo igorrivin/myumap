@@ -9,6 +9,12 @@ from videoproc import get_dim
 def gen_van(funcs, vals):
     return np.array([[f(v) for f in funcs] for v in vals])
 
+def make_silly(n):
+   return lambda x: 2 * x**n - x **(2*n)
+
+def make_many(n):
+   return [make_silly(i) for i in range(n)]
+
 def fit_gen_poly(funcs, data, eps = 1e-6):
     ecdf = ECDF(data)
     x = ecdf.x[1:]
