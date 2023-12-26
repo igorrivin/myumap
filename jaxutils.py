@@ -12,9 +12,12 @@ def get_uvec2(f):
 def get_cvec(f):
   return get_uvec2(get_uvec2(f))
 
+def get_cvec2(tt):
+  return get_uvec2(tt)
+
 def get_frame(f):
   tt = get_uvec2(f)
-  tt2 = get_cvec(f)
+  tt2 = get_cvec2(tt)
   def first2(t):
     x = tt(t)
     y = tt2(t)
