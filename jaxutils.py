@@ -1,9 +1,10 @@
 from jax import grad, jit, vmap, jacfwd
 from jax import random
 from functools import partial
-import numpy as np
 import jax.numpy as jnp
-import matplotlib.pyplot as plt
+import jax.numpy as jnp
+import jax.random as jr
+import numpy as np
 
 def get_uvec2(f):
   tanvec = jit(jacfwd(f))
@@ -82,6 +83,37 @@ def get_irreg_grid_full(f, num, eps):
   g = get_gridb(f, eps)
   g = vmap(g, in_axes=( 0))
   return jnp.vstack(g(parray))
+
+def make_rand_knot(decay, l):
+  #seed = int(time.time())
+  seed = np.random.randint(0, 1e6)
+  key = jr.PRNGKey(seed)
+  key, subkey = jr.split(key)
+  thebatch1x = jr.normal(subkey, shape=(l,))
+  key, subkey = jr.split(key)
+  thebatch2x = jr.normal(subkey, shape=(l,))
+  key, subkey = jr.split(key)
+  thebatch1y = jr.normal(subkey, shape=(l,))
+  key, subkey = jr.split(key)
+  thebatch2y= jr.normal(subkey, shape=(l,))
+  key, subkey = jr.split(key)
+  thebatch1z = jr.normal(subkey, shape=(l,))
+  key, subkey = jr.split(key)
+  thebatch2z= jr.normal(subkey, shape=(l,))
+  scaler = jnp.arange(1, l+1, dtype = jnp.float32)**(-decay)
+  coefs1x = thebatch1x * scaler
+  coefs2x = thebatch2x * scaler
+  coefs1y = thebatch1y * scaler
+  coefs2y = thebatch2y * scaler
+  coefs1z = thebatch1z * scaler
+  coefs2z = thebatch2z * scaler
+  def make_ser(x):
+    c = jnp.arange(1, l+1, dtype = jnp.float32)
+    cc = c * 2 * jnp.pi * x
+    coses = jnp.cos(cc)
+    sines = jnp.sin(cc)
+    return jnp.array([jnp.sum(coefs1x * coses) + jnp.sum(coefs2x * sines), jnp.sum(coefs1y * coses) + jnp.sum(coefs2y * sines), jnp.sum(coefs1z * coses) + jnp.sum(coefs2z * sines)])
+  return make_ser
 
 #f2 = lambda x: jnp.array([ (2 + jnp.cos(2* 2 * jnp.pi * x)) * jnp.cos(3*2 * jnp.pi * x), ( 2 + jnp.cos(2*2 * jnp.pi * x)) * jnp.sin(3*2 * jnp.pi * x), -3 * jnp.sin(2*2 * jnp.pi * x)])
 
