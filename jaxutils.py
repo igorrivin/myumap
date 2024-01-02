@@ -227,7 +227,11 @@ def get_poly(x_data, y_data):
 def get_alex_poly(func, numpts = 100):
    foo = get_knot(func)
    frog = Knot(foo)
-   x = list(range(numpts))
+   apoly = frog.alexander_polynomial()
+   gcode = frog.gauss_code()
+   if len(gcode) < 3:
+      return 1
+   x = list(range(1, numpts+1))
    y = [frog.alexander_polynomial(variable = xx) for xx in x]
    return get_poly(x, y)
 
