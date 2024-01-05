@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+umap-learn = "*"
+trimap = "*"
+pacmap = "*"
+jax = "*"
+jaxlib = "*"
+opencv-python = "*"
+faiss-cpu = "*"
+matplotlib = "*"
+pytube = "*"
+scenedetect = "*"
+pyvista = "*"
+sympy = "*"
+pyknotid = {git = "git+https://github.com/SPOCKnots/pyknotid.git"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
