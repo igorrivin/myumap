@@ -17,6 +17,7 @@ scenedetect = "*"
 pyvista = "*"
 sympy = "*"
 pyknotid = {git = "git+https://github.com/SPOCKnots/pyknotid.git"}
+jupyter = "*"
 
 [dev-packages]
 
